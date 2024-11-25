@@ -1,4 +1,4 @@
-package pairmatching.io;
+package pairmatching.io.view;
 
 import camp.nextstep.edu.missionutils.Console;
 

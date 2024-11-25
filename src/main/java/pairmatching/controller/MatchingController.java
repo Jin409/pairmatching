@@ -1,13 +1,15 @@
 package pairmatching.controller;
 
+import pairmatching.dto.MatchingResultDto;
 import pairmatching.handler.ErrorHandler;
 import pairmatching.handler.InputHandler;
 import java.util.List;
 import pairmatching.dto.CrewRegisterDto;
 import pairmatching.dto.PairMatchingRequestDto;
-import pairmatching.io.AnswerSign;
+import pairmatching.io.sign.AnswerSign;
 import pairmatching.io.FileReader;
-import pairmatching.io.Option;
+import pairmatching.io.sign.Option;
+import pairmatching.io.view.OutputView;
 import pairmatching.service.CrewService;
 import pairmatching.service.PairMatchingService;
 
@@ -25,6 +27,10 @@ public class MatchingController {
         List<CrewRegisterDto> crewRegisterDtos = FileReader.readCrews();
         crewService.registerCrews(crewRegisterDtos);
 
+        processing();
+    }
+
+    private void processing() {
         while (true) {
             Option option = readOption();
             if (option.meansQuit()) {
@@ -32,10 +38,35 @@ public class MatchingController {
             }
 
             if (option.isMatching()) {
-                PairMatchingRequestDto pairMatchingRequestDto = readPairMatchingRequest();
-                processMatching(pairMatchingRequestDto);
+                processMatching();
             }
         }
+    }
+
+    private void processMatching() {
+        PairMatchingRequestDto pairMatchingRequestDto = readPairMatchingRequest();
+
+        if (pairMatchingService.isExists(pairMatchingRequestDto)) {
+            AnswerSign rematchingAnswerSign = getRematchingAnswerSign();
+            if (rematchingAnswerSign.meansTrue()) {
+                matchPairs(pairMatchingRequestDto);
+            }
+
+            if (rematchingAnswerSign.meansFalse()) {
+                processMatching();
+            }
+            return;
+        }
+
+        matchPairs(pairMatchingRequestDto);
+
+        // 이전 내역이 없는 경우
+
+    }
+
+    private void matchPairs(PairMatchingRequestDto pairMatchingRequestDto) {
+        List<MatchingResultDto> resultDtos = pairMatchingService.match(pairMatchingRequestDto);
+        OutputView.displayMatchedResult(resultDtos);
     }
 
 
@@ -57,20 +88,6 @@ public class MatchingController {
                 return pairMatchingRequestDto;
             } catch (Exception e) {
                 ErrorHandler.handle(e);
-            }
-        }
-    }
-
-    private void processMatching(PairMatchingRequestDto pairMatchingRequestDto) {
-        if (pairMatchingService.isExists(pairMatchingRequestDto)) {
-            AnswerSign rematchingAnswerSign = getRematchingAnswerSign();
-            if (rematchingAnswerSign.meansTrue()) {
-
-            }
-
-            if (rematchingAnswerSign.meansFalse()) {
-                // 다시 매칭 안할 것이다
-
             }
         }
     }

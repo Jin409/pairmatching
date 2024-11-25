@@ -8,4 +8,12 @@ public class Crew {
         this.name = name;
         this.course = course;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isCrewOf(Course course) {
+        return this.course.equals(course);
+    }
 }

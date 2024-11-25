@@ -40,7 +40,7 @@ public class FileReader {
     }
 
     public static List<CrewRegisterDto> readCrews() {
-        List<CrewRegisterDto> crews = readFrontendCrews();
+        List<CrewRegisterDto> crews = new ArrayList<>();
         crews.addAll(readBackendCrews());
         crews.addAll(readFrontendCrews());
         return crews;

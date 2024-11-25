@@ -16,7 +16,7 @@ public class AppConfig {
     }
 
     public PairMatchingService pairMatchingService() {
-        return new PairMatchingService(pairMatchingHistoryRepository());
+        return new PairMatchingService(pairMatchingHistoryRepository(), crewRepository());
     }
 
     public CrewService crewService() {

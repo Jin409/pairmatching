@@ -2,7 +2,7 @@ package pairmatching.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class PairMatchingHistoryRepository {
     private static List<PairMatchingHistory> histories;
@@ -15,8 +15,27 @@ public class PairMatchingHistoryRepository {
         histories.add(history);
     }
 
-    public boolean doesHistoryExistsOf(Mission mission) {
-        return histories.stream()
-                .anyMatch(history -> history.isHistoryOf(mission));
+    public boolean doesHistoryExistsOf(Mission mission, Course course) {
+        for (PairMatchingHistory history : histories) {
+            if (history.isHistoryOf(mission, course)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean doesHistoryExistsOf(Mission mission, Course course, List<List<Crew>> pairs) {
+        List<PairMatchingHistory> collectedHistory = histories.stream()
+                .filter(history -> history.isHistoryOf(mission, course))
+                .collect(Collectors.toList());
+
+        for (PairMatchingHistory history : collectedHistory) {
+            for (List<Crew> pair : pairs) {
+                if (history.hasSamePair(pair)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
