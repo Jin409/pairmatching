@@ -2,7 +2,6 @@ package pairmatching.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import pairmatching.dto.MatchingResultDto;
 import pairmatching.dto.PairMatchingRequestDto;
@@ -97,8 +96,12 @@ public class PairMatchingService {
         return pairs;
     }
 
-    public void resetPairs(PairMatchingRequestDto pairMatchingRequestDto) {
-        pairMatchingHistoryRepository.delete(Mission.findByName(pairMatchingRequestDto.getMission()),
+    public void resetSelectedPairs(PairMatchingRequestDto pairMatchingRequestDto) {
+        pairMatchingHistoryRepository.deleteSelectedPairs(Mission.findByName(pairMatchingRequestDto.getMission()),
                 Course.findByValue(pairMatchingRequestDto.getCourse()));
+    }
+
+    public void resetAllPairs() {
+        pairMatchingHistoryRepository.deleteAll();
     }
 }

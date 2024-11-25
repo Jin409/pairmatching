@@ -45,8 +45,15 @@ public class MatchingController {
                 processReading();
             }
 
-
+            if (option.meansReset()) {
+                processReset();
+            }
         }
+    }
+
+    private void processReset() {
+        pairMatchingService.resetAllPairs();
+        OutputView.noticeResetCompleted();
     }
 
     private void processMatching() {
@@ -56,7 +63,7 @@ public class MatchingController {
             AnswerSign rematchingAnswerSign = getRematchingAnswerSign();
 
             if (rematchingAnswerSign.meansTrue()) {
-                pairMatchingService.resetPairs(pairMatchingRequestDto);
+                pairMatchingService.resetSelectedPairs(pairMatchingRequestDto);
                 matchPairs(pairMatchingRequestDto);
             }
 

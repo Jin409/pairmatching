@@ -14,5 +14,9 @@ public class OutputView {
     private static String toFormat(List<String> names) {
         return String.join(" : ", names);
     }
+
+    public static void noticeResetCompleted() {
+        System.out.println("초기화 되었습니다.");
+    }
 }
 
