@@ -1,7 +1,9 @@
 package pairmatching.io;
 
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -9,7 +11,7 @@ import java.util.stream.Collectors;
 import pairmatching.dto.CrewRegisterDto;
 import pairmatching.handler.ErrorHandler;
 
-public class FileReader {
+public class CrewFileReader {
 
     private static final String PATH_OF_BACKEND_CREW_NAMES = "src/main/resources/backend-crew.md";
     private static final String PATH_OF_FRONTEND_CREW_NAMES = "src/main/resources/frontend-crew.md";
@@ -19,8 +21,7 @@ public class FileReader {
         try {
             Scanner scanner = new Scanner(new File(path));
             while (scanner.hasNextLine()) {
-                String name = scanner.nextLine();
-                result.add(name);
+                result.add(scanner.nextLine());
             }
             return result;
         } catch (Exception e) {
@@ -36,7 +37,8 @@ public class FileReader {
 
     private static List<CrewRegisterDto> readFrontendCrews() {
         List<String> frontendCrewNames = readMarkdownFile(PATH_OF_FRONTEND_CREW_NAMES);
-        return frontendCrewNames.stream().map(name -> new CrewRegisterDto("프론트엔드", name)).collect(Collectors.toList());
+        return frontendCrewNames.stream().map(name -> new CrewRegisterDto("프론트엔드", name))
+                .collect(Collectors.toList());
     }
 
     public static List<CrewRegisterDto> readCrews() {

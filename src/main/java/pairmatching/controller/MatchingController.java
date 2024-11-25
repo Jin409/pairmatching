@@ -6,8 +6,8 @@ import pairmatching.handler.InputHandler;
 import java.util.List;
 import pairmatching.dto.CrewRegisterDto;
 import pairmatching.dto.PairMatchingRequestDto;
+import pairmatching.io.CrewFileReader;
 import pairmatching.io.sign.AnswerSign;
-import pairmatching.io.FileReader;
 import pairmatching.io.sign.Option;
 import pairmatching.io.view.OutputView;
 import pairmatching.service.CrewService;
@@ -24,7 +24,7 @@ public class MatchingController {
     }
 
     public void run() {
-        List<CrewRegisterDto> crewRegisterDtos = FileReader.readCrews();
+        List<CrewRegisterDto> crewRegisterDtos = CrewFileReader.readCrews();
         crewService.registerCrews(crewRegisterDtos);
 
         processing();
