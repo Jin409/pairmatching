@@ -24,13 +24,16 @@ public class MatchingController {
     }
 
     public void run() {
-        List<CrewRegisterDto> crewRegisterDtos = CrewFileReader.readCrews();
-        crewService.registerCrews(crewRegisterDtos);
-
-        processing();
+        readyToMatch();
+        process();
     }
 
-    private void processing() {
+    private void readyToMatch() {
+        List<CrewRegisterDto> crewRegisterDtos = CrewFileReader.readCrews();
+        crewService.registerCrews(crewRegisterDtos);
+    }
+
+    private void process() {
         while (true) {
             Option option = readOption();
             if (option.meansQuit()) {
@@ -59,27 +62,30 @@ public class MatchingController {
     private void processMatching() {
         PairMatchingRequestDto pairMatchingRequestDto = readPairMatchingRequest();
 
-        if (pairMatchingService.isExists(pairMatchingRequestDto)) {
-            AnswerSign rematchingAnswerSign = getRematchingAnswerSign();
-
-            if (rematchingAnswerSign.meansTrue()) {
-                pairMatchingService.resetSelectedPairs(pairMatchingRequestDto);
-                matchPairs(pairMatchingRequestDto);
-            }
-
-            if (rematchingAnswerSign.meansFalse()) {
-                processMatching();
-            }
+        if (pairMatchingService.doesExist(pairMatchingRequestDto)) {
+            handleExistedProcessHistory(pairMatchingRequestDto);
             return;
         }
-
         matchPairs(pairMatchingRequestDto);
+    }
+
+    private void handleExistedProcessHistory(PairMatchingRequestDto pairMatchingRequestDto) {
+        AnswerSign rematchingAnswerSign = getRematchingAnswerSign();
+
+        if (rematchingAnswerSign.meansTrue()) {
+            pairMatchingService.resetSelectedPairs(pairMatchingRequestDto);
+            matchPairs(pairMatchingRequestDto);
+        }
+
+        if (rematchingAnswerSign.meansFalse()) {
+            processMatching();
+        }
     }
 
     private void processReading() {
         PairMatchingRequestDto pairMatchingRequestDto = readPairMatchingRequest();
 
-        if (pairMatchingService.isExists(pairMatchingRequestDto)) {
+        if (pairMatchingService.doesExist(pairMatchingRequestDto)) {
             OutputView.displayMatchedResult(pairMatchingService.read(pairMatchingRequestDto));
             return;
         }
@@ -90,7 +96,6 @@ public class MatchingController {
         List<MatchingResultDto> resultDtos = pairMatchingService.match(pairMatchingRequestDto);
         OutputView.displayMatchedResult(resultDtos);
     }
-
 
     private Option readOption() {
         while (true) {

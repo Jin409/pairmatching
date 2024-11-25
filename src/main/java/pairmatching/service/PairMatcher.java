@@ -13,14 +13,15 @@ public class PairMatcher {
                 .collect(Collectors.toList());
 
         List<String> shuffledNames = Randoms.shuffle(names);
+        return getMatchedResult(shuffledNames);
+    }
 
+    private static List<List<String>> getMatchedResult(List<String> shuffledNames) {
         List<List<String>> result = new ArrayList<>();
         int count = 1;
         int index = 0;
-        while (true) {
-            if (count > shuffledNames.size() / 2) {
-                break;
-            }
+
+        while (count <= shuffledNames.size() / 2) {
             List<String> pair = new ArrayList<>();
             pair.add(shuffledNames.get(index));
             pair.add(shuffledNames.get(index + 1));
@@ -29,11 +30,10 @@ public class PairMatcher {
             count++;
         }
 
-        if (names.size() % 2 == 1) {
+        if (shuffledNames.size() % 2 == 1) {
             int lastIndex = result.size() - 1;
-            result.get(lastIndex).add(shuffledNames.get(names.size() - 1));
+            result.get(lastIndex).add(shuffledNames.get(shuffledNames.size() - 1));
         }
-
         return result;
     }
 }

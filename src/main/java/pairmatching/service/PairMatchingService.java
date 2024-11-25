@@ -32,7 +32,7 @@ public class PairMatchingService {
         Mission.findByNameAndLevel(pairMatchingRequestDto.getMission(), level);
     }
 
-    public boolean isExists(PairMatchingRequestDto pairMatchingRequestDto) {
+    public boolean doesExist(PairMatchingRequestDto pairMatchingRequestDto) {
         return pairMatchingHistoryRepository.doesHistoryExistsOf(
                 Mission.findByName(pairMatchingRequestDto.getMission()),
                 Course.findByValue(pairMatchingRequestDto.getCourse()));
