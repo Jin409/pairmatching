@@ -97,4 +97,8 @@ public class PairMatchingService {
         return pairs;
     }
 
+    public void resetPairs(PairMatchingRequestDto pairMatchingRequestDto) {
+        pairMatchingHistoryRepository.delete(Mission.findByName(pairMatchingRequestDto.getMission()),
+                Course.findByValue(pairMatchingRequestDto.getCourse()));
+    }
 }

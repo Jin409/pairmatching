@@ -5,6 +5,7 @@ import pairmatching.dto.MatchingResultDto;
 
 public class OutputView {
     public static void displayMatchedResult(List<MatchingResultDto> matchingResultDtos) {
+        System.out.println("페어 매칭 결과입니다.");
         for (MatchingResultDto result : matchingResultDtos) {
             System.out.println(toFormat(result.getName()));
         }

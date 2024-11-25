@@ -44,4 +44,9 @@ public class PairMatchingHistoryRepository {
                 .filter(history -> history.isHistoryOf(mission, course))
                 .collect(Collectors.toList());
     }
+
+    public void delete(Mission mission, Course course) {
+        List<PairMatchingHistory> foundHistories = find(mission, course);
+        histories.removeAll(foundHistories);
+    }
 }

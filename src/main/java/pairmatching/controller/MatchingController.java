@@ -54,7 +54,9 @@ public class MatchingController {
 
         if (pairMatchingService.isExists(pairMatchingRequestDto)) {
             AnswerSign rematchingAnswerSign = getRematchingAnswerSign();
+
             if (rematchingAnswerSign.meansTrue()) {
+                pairMatchingService.resetPairs(pairMatchingRequestDto);
                 matchPairs(pairMatchingRequestDto);
             }
 
