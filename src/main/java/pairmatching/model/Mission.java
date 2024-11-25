@@ -27,7 +27,7 @@ public enum Mission {
         this.name = name;
     }
 
-    private static Mission findByName(String comparedName) {
+    public static Mission findByName(String comparedName) {
         return Arrays.stream(Mission.values())
                 .filter(m -> m.name.equals(comparedName))
                 .findAny()

@@ -21,4 +21,8 @@ public enum Option {
     public boolean isMatching() {
         return this == MATCHING;
     }
+
+    public boolean meansQuit() {
+        return this == QUIT;
+    }
 }

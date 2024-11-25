@@ -5,6 +5,7 @@ import pairmatching.handler.InputHandler;
 import java.util.List;
 import pairmatching.dto.CrewRegisterDto;
 import pairmatching.dto.PairMatchingRequestDto;
+import pairmatching.io.AnswerSign;
 import pairmatching.io.FileReader;
 import pairmatching.io.Option;
 import pairmatching.service.CrewService;
@@ -23,9 +24,17 @@ public class MatchingController {
     public void run() {
         List<CrewRegisterDto> crewRegisterDtos = FileReader.readCrews();
         crewService.registerCrews(crewRegisterDtos);
-        Option option = readOption();
-        if (option.isMatching()) {
-            readPairMatchingRequest();
+
+        while (true) {
+            Option option = readOption();
+            if (option.meansQuit()) {
+                return;
+            }
+
+            if (option.isMatching()) {
+                PairMatchingRequestDto pairMatchingRequestDto = readPairMatchingRequest();
+                processMatching(pairMatchingRequestDto);
+            }
         }
     }
 
@@ -40,12 +49,36 @@ public class MatchingController {
         }
     }
 
-    private void readPairMatchingRequest() {
+    private PairMatchingRequestDto readPairMatchingRequest() {
         while (true) {
             try {
                 PairMatchingRequestDto pairMatchingRequestDto = InputHandler.readPairMatchingRequest();
-                pairMatchingService.matchingPairs(pairMatchingRequestDto);
-                return;
+                pairMatchingService.validatePairMatchingRequestDto(pairMatchingRequestDto);
+                return pairMatchingRequestDto;
+            } catch (Exception e) {
+                ErrorHandler.handle(e);
+            }
+        }
+    }
+
+    private void processMatching(PairMatchingRequestDto pairMatchingRequestDto) {
+        if (pairMatchingService.isExists(pairMatchingRequestDto)) {
+            AnswerSign rematchingAnswerSign = getRematchingAnswerSign();
+            if (rematchingAnswerSign.meansTrue()) {
+
+            }
+
+            if (rematchingAnswerSign.meansFalse()) {
+                // 다시 매칭 안할 것이다
+
+            }
+        }
+    }
+
+    public AnswerSign getRematchingAnswerSign() {
+        while (true) {
+            try {
+                return InputHandler.readRematchingAnswer();
             } catch (Exception e) {
                 ErrorHandler.handle(e);
             }

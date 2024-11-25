@@ -1,6 +1,7 @@
 package pairmatching.handler;
 
 import pairmatching.dto.PairMatchingRequestDto;
+import pairmatching.io.AnswerSign;
 import pairmatching.io.InputView;
 import pairmatching.io.Option;
 import pairmatching.io.validator.InputValidator;
@@ -18,5 +19,10 @@ public class InputHandler {
         InputValidator.validatePairMatchingRequestInput(rawRequestInput);
         String[] splitInput = rawRequestInput.split(DELIMITER);
         return new PairMatchingRequestDto(splitInput[0].trim(), splitInput[1].trim(), splitInput[2].trim());
+    }
+
+    public static AnswerSign readRematchingAnswer() {
+        String rawAnswerSign = InputView.readReMatchingAnswer();
+        return AnswerSign.findBySign(rawAnswerSign);
     }
 }
