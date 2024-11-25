@@ -16,7 +16,7 @@
 Q. 종료
 ```
 
-- [ ] 잘못된 입력값에 대해 IllegalArgumentException 를 던진다
+- [x] 잘못된 입력값에 대해 IllegalArgumentException 를 던진다
 
 ## 과정 레벨 미션을 입력 받는다
 
