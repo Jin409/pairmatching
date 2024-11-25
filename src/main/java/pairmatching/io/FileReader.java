@@ -1,4 +1,4 @@
-package pairmatching;
+package pairmatching.io;
 
 
 import java.io.File;
@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 import pairmatching.dto.CrewRegisterDto;
+import pairmatching.handler.ErrorHandler;
 
 public class FileReader {
 

@@ -17,4 +17,8 @@ public enum Option {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 기능입니다."));
     }
+
+    public boolean isMatching() {
+        return this == MATCHING;
+    }
 }

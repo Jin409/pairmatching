@@ -1,4 +1,4 @@
-package pairmatching;
+package pairmatching.handler;
 
 public class ErrorHandler {
 
