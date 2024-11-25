@@ -28,7 +28,7 @@ public class PairMatchingService {
     }
 
     public void validatePairMatchingRequestDto(PairMatchingRequestDto pairMatchingRequestDto) {
-        Course course = Course.findByValue(pairMatchingRequestDto.getCourse());
+        Course.findByValue(pairMatchingRequestDto.getCourse());
         Level level = Level.findByValue(pairMatchingRequestDto.getLevel());
         Mission.findByNameAndLevel(pairMatchingRequestDto.getMission(), level);
     }
@@ -37,6 +37,22 @@ public class PairMatchingService {
         return pairMatchingHistoryRepository.doesHistoryExistsOf(
                 Mission.findByName(pairMatchingRequestDto.getMission()),
                 Course.findByValue(pairMatchingRequestDto.getCourse()));
+    }
+
+    public List<MatchingResultDto> read(PairMatchingRequestDto pairMatchingRequestDto) {
+        List<MatchingResultDto> results = new ArrayList<>();
+
+        Mission mission = Mission.findByName(pairMatchingRequestDto.getMission());
+        Course course = Course.findByValue(pairMatchingRequestDto.getCourse());
+
+        List<PairMatchingHistory> pairMatchingHistories = pairMatchingHistoryRepository.find(mission, course);
+        for (PairMatchingHistory pairMatchingHistory : pairMatchingHistories) {
+            List<String> names = pairMatchingHistory.getPair().stream()
+                    .map(Crew::getName)
+                    .collect(Collectors.toList());
+            results.add(new MatchingResultDto(names));
+        }
+        return results;
     }
 
     public List<MatchingResultDto> match(PairMatchingRequestDto pairMatchingRequestDto) {
@@ -48,7 +64,7 @@ public class PairMatchingService {
         for (int i = 0; i < MAXIMUM_TRY_COUNT; i++) {
             List<List<String>> matchedResults = PairMatcher.match(crews);
             List<List<Crew>> pairs = getPairs(matchedResults);
-            if (pairMatchingHistoryRepository.doesHistoryExistsOf(mission, course)) {
+            if (pairMatchingHistoryRepository.doesHistoryExistsOf(mission, course, pairs)) {
                 continue;
             }
             saveHistories(mission, level, course, pairs);

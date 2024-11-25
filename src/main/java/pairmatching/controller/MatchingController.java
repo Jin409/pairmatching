@@ -40,6 +40,12 @@ public class MatchingController {
             if (option.isMatching()) {
                 processMatching();
             }
+
+            if (option.meansRead()) {
+                processReading();
+            }
+
+
         }
     }
 
@@ -59,9 +65,16 @@ public class MatchingController {
         }
 
         matchPairs(pairMatchingRequestDto);
+    }
 
-        // 이전 내역이 없는 경우
+    private void processReading() {
+        PairMatchingRequestDto pairMatchingRequestDto = readPairMatchingRequest();
 
+        if (pairMatchingService.isExists(pairMatchingRequestDto)) {
+            OutputView.displayMatchedResult(pairMatchingService.read(pairMatchingRequestDto));
+            return;
+        }
+        ErrorHandler.handle(new IllegalArgumentException("매칭 이력이 없습니다."));
     }
 
     private void matchPairs(PairMatchingRequestDto pairMatchingRequestDto) {

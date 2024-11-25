@@ -27,4 +27,8 @@ public class PairMatchingHistory {
         }
         return true;
     }
+
+    public List<Crew> getPair() {
+        return pair;
+    }
 }

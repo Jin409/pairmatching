@@ -38,4 +38,10 @@ public class PairMatchingHistoryRepository {
         }
         return false;
     }
+
+    public List<PairMatchingHistory> find(Mission mission, Course course) {
+        return histories.stream()
+                .filter(history -> history.isHistoryOf(mission, course))
+                .collect(Collectors.toList());
+    }
 }

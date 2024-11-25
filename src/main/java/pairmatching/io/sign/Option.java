@@ -25,4 +25,8 @@ public enum Option {
     public boolean meansQuit() {
         return this == QUIT;
     }
+
+    public boolean meansRead() {
+        return this == READ;
+    }
 }
