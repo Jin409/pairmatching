@@ -1,5 +1,6 @@
 package pairmatching.controller;
 
+import java.util.function.Supplier;
 import pairmatching.dto.MatchingResultDto;
 import pairmatching.handler.ErrorHandler;
 import pairmatching.handler.InputHandler;
@@ -107,23 +108,29 @@ public class MatchingController {
         }
     }
 
-    private PairMatchingRequestDto readPairMatchingRequest() {
+    public AnswerSign getRematchingAnswerSign() {
         while (true) {
             try {
-                PairMatchingRequestDto pairMatchingRequestDto = InputHandler.readPairMatchingRequest();
-                pairMatchingService.validatePairMatchingRequestDto(pairMatchingRequestDto);
-                return pairMatchingRequestDto;
+                return InputHandler.readRematchingAnswer();
             } catch (Exception e) {
                 ErrorHandler.handle(e);
             }
         }
     }
 
-    public AnswerSign getRematchingAnswerSign() {
+    private PairMatchingRequestDto readPairMatchingRequest() {
+        return retryOnInvalidInput(() -> {
+            PairMatchingRequestDto pairMatchingRequestDto = InputHandler.readPairMatchingRequest();
+            pairMatchingService.validatePairMatchingRequestDto(pairMatchingRequestDto);
+            return pairMatchingRequestDto;
+        });
+    }
+
+    private <T> T retryOnInvalidInput(Supplier<T> inputSupplier) {
         while (true) {
             try {
-                return InputHandler.readRematchingAnswer();
-            } catch (Exception e) {
+                return inputSupplier.get();
+            } catch (IllegalArgumentException e) {
                 ErrorHandler.handle(e);
             }
         }
